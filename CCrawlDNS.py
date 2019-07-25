@@ -76,7 +76,6 @@ def GetLinks(CdxApi, IndexNum):
 					})
 		print("{0} Processed".format(IndexNum))
 	except:
-		raise
 		pass
 
 def GetIndexFile():
