@@ -15,12 +15,19 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import requests, json, argparse, re, os, multiprocessing, sqlite3
+import requests, json, optparse, re, os, sys, multiprocessing, sqlite3
 
-parser = argparse.ArgumentParser()
-parser.add_argument('domain', help = 'Target domain to lookup', type = str)
-args = parser.parse_args()
-Target = args.domain
+parser = optparse.OptionParser(usage='python %prog -p -f asp -d microsoft.com', prog=sys.argv[0])
+parser.add_option('-d','--domain', action="store", help="Target domain", dest="Domain", default=None)
+parser.add_option('-p','--printurl', action="store_true", help="Print all collected URL", dest="PrintURL", default=None)
+parser.add_option('-f','--FileExt', action="store", help="Print collected URL with the following file extension", dest="FileExt", default=None)
+options, args = parser.parse_args()
+Target = options.Domain
+PrintURL = options.PrintURL
+FileExt = options.FileExt
+
+if Target is None:
+	sys.exit('Mandatory option -d missing.\nExiting...')
 
 def DbConnect():
     cursor = sqlite3.connect('./Results.db')
@@ -70,6 +77,13 @@ def GetLinks(CdxApi, IndexNum):
 	try:
 		for entry in Ans:
 			Url = json.loads(entry)['url']
+			if PrintURL is True and FileExt is not None:
+				URLZ = re.findall(FileExt, Url)
+				if URLZ:
+					print(Url)
+			if PrintURL is True and FileExt is None:
+				print(Url)
+
 			Domains =  re.findall(r'(?<=://)[^/|?|#]*', Url)[0]
 			SaveSubDomainToDb({
 					'Domain': Domains

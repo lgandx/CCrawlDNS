@@ -12,14 +12,23 @@ CCrawlDNS is a small pentest utility that make use of the CommonCrawl data set A
 
 This tool uses multiprocessing for performance enhancement.
 
+New option added: Ability to print all collected URLs for a given domain and search by file extensions.
+
 ## Usage ##
 
 Running the tool:
 
-    python CCrawlDNS.py example.com
+    python CCrawlDNS.py -d example.com
 
-    python3 CCrawlDNS.py example.com
+    python3 CCrawlDNS.py -d example.com
 
+    Print all URLs:
+
+    python CCrawlDNS.py -d example.com -p
+
+    Print all URLs with the file extension ".asp":
+
+    python CCrawlDNS.py -d example.com -p -f .asp
 
 ## Requirements ##
 
