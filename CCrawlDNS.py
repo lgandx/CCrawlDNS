@@ -64,11 +64,13 @@ def GetSubdomainStatistic(cursor):
      res = cursor.execute("SELECT COUNT(DISTINCT UPPER(Domain)) FROM SubDomain")
      for row in res.fetchall():
          print('\n[+] In total {0} unique subdomains were retrieved.'.format(row[0]))
-
+     cursor.close()
+     
 def GetSubdomains(cursor):
      res = cursor.execute("SELECT DISTINCT Domain FROM SubDomain")
      for row in res.fetchall():
          print('Subdomain found: {0}'.format(row[0]))
+     cursor.close()
 
 def GetLinks(CdxApi, IndexNum):
 	print("Processing {0}".format(IndexNum))
@@ -94,11 +96,9 @@ def GetLinks(CdxApi, IndexNum):
 
 def GetIndexFile():
 	IndexURL = "https://index.commoncrawl.org/collinfo.json"
-	Data = requests.get(IndexURL).text
-	Indexes = json.loads(Data)
+	Indexes = json.loads(requests.get(IndexURL).text)
 	threads = []
-	print("You have %s CPUs...\nLet's use them all!"%multiprocessing.cpu_count())
-	Pool = multiprocessing.Pool(processes=multiprocessing.cpu_count())
+	Pool = multiprocessing.Pool(processes=150)
 	for res in Indexes:
 		proc = Pool.apply_async(GetLinks, (res['cdx-api'],(res['id'])))
 		threads.append(proc)
@@ -110,6 +110,7 @@ def main():
 	cursor = DbConnect()
 	GetIndexFile()
 	GetSubdomainStatistic(cursor)
+	cursor = DbConnect()
 	GetSubdomains(cursor)
 
 if __name__ == '__main__':
