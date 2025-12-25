@@ -35,3 +35,8 @@ Running the tool:
     //Search all collected subdomains for yahoo.com from 2008 to now, include 1 dataset (much slower, but complete)
     python3 CCrawlDNS.py -d yahoo.com --years all --max-per-year 1
 
+## Demo ##
+
+
+https://github.com/user-attachments/assets/a6cf968f-2bac-4de3-80a3-43f697b923de
+
